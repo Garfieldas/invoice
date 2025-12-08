@@ -1,0 +1,12 @@
+.env
+env
+.vscode
+mypy.ini
+.dmypy.json
+db.sqlite3
+
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+exclude = ^(.*__pycache__.*|.*migrations.*)$
