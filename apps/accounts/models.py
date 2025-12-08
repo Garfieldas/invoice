@@ -45,3 +45,29 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+class SelfInfo(models.Model):
+
+    BANK_CHOICES = (
+        ("SWEDBANK", "Swedbank"),
+        ("SEB", "Seb"),
+        ("CITADELE", "Citadele"),
+        ("LUMINOR", "Luminor"),
+        ("ARTEA", "ARTEA"),
+        ("REVOLUT", "Revolut")
+    )
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='self_info')
+    individual_code = models.CharField(max_length=255, blank=False)
+    activity_start_date = models.DateField(null=True, blank=True, help_text="Activity start date")
+    address = models.CharField(max_length=255, blank=False)
+    phone_number = models.CharField(max_length=20, blank=False)
+    bank_name = models.CharField(choices=BANK_CHOICES, max_length=50, blank=False)
+    iban = models.CharField(max_length=50, blank=False)
+
+    @property
+    def full_name(self):
+        return f"{self.user.first_name} {self.user.last_name}"
+    
+    def __str__(self):
+        return f"{self.individual_code} {self.address}"
