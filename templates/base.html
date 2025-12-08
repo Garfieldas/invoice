@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Invoice</title>
+</head>
+<body>
+    <div class="drawer">
+        <input type="checkbox" class="drawer-toggle" id="my-drawer" />
+        <div class="drawer-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div class="drawer-side">
+        </div>
+    </div>
+</body>
+</html>
