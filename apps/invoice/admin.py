@@ -7,6 +7,7 @@ from invoice.models import Invoice, InvoiceItem
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ('user', 'customer', 'invoice_number', 'created_at')
     search_fields = ('user', 'customer', 'invoice_number', 'created_at')
+    exclude = ('invoice_number',)
 
     def get_queryset(self, request: HttpRequest) -> QuerySet:
         qs = super().get_queryset(request)
