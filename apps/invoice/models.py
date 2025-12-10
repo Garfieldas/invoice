@@ -38,14 +38,15 @@ class Invoice(models.Model):
         self.created_at = today
         self.pay_until = self.created_at + timedelta(days=15)
 
-    def save(self, *args, **kwargs):
-        if not self.due_date:
-            self.generate_pay_until_date()
-        self.generate_invoice_number()
+    def save(self, *args, update=False, **kwargs):
+        if not update:
+            if not self.due_date:
+                self.generate_pay_until_date()
+            self.generate_invoice_number()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.user.full_name} - {self.invoice_number} - {self.created_at}"
+        return f"{self.user.full_name} - {self.invoice_number}"
     
 
 class InvoiceItem(models.Model):

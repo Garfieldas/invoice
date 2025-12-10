@@ -31,7 +31,7 @@ def recalculate_invoice_total_price(sender, instance:InvoiceItem, created, **kwa
                     invoice.total_price += calculate_invoice_item_price(instance)
         else:
             invoice.total_price = sum_invoice_items_price(invoice_items)
-        invoice.save()
+        invoice.save(update=True)
         
     except Invoice.DoesNotExist:
         print('Failed to get invoice!')
@@ -48,8 +48,8 @@ def recalculate_invoice_total_price_on_item_delete(sender, instance:InvoiceItem,
             invoice.total_price = sum_invoice_items_price(invoice_items)
         else:
             invoice.total_price = Decimal("0.00")
-        invoice.save()
-        
+        invoice.save(update=True)
+
     except Invoice.DoesNotExist:
         print('Failed to get invoice!')
         return None
