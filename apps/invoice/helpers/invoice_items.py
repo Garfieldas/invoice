@@ -15,7 +15,7 @@ def get_invoice_items(invoice: Invoice, exclude:Optional[InvoiceItem]=None)->Opt
     else:
         return invoice_items
 
-def override_invoice_price(invoice_items)->bool:
+def override_invoice_price(invoice_items:Optional[QuerySet])->bool:
     """
     Determine if invoice previosly had any invoice items
     """
