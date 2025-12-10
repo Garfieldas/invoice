@@ -34,6 +34,10 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     objects = UserManager()
 
     def save(self, *args, **kwargs):
@@ -64,10 +68,6 @@ class SelfInfo(models.Model):
     phone_number = models.CharField(max_length=20, blank=False)
     bank_name = models.CharField(choices=BANK_CHOICES, max_length=50, blank=False)
     iban = models.CharField(max_length=50, blank=False)
-
-    @property
-    def full_name(self):
-        return f"{self.user.first_name} {self.user.last_name}"
     
     def __str__(self):
         return f"{self.individual_code} {self.address}"
