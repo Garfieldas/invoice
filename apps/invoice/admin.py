@@ -20,4 +20,4 @@ class InvoiceItemAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request: HttpRequest) -> QuerySet:
         qs = super().get_queryset(request)
-        return qs.select_related('invoice')
+        return qs.select_related('invoice', 'invoice__user')
