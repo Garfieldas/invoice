@@ -17,42 +17,20 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for invoice in recent_invoices %}
                     <tr class="hover">
-                        <td class="font-mono">#102</td>
+                        <td class="font-mono">{{ invoice.invoice_number }}</td>
                         <td>
-                            <div class="font-semibold">Jonas</div>
-                            <div class="text-sm opacity-50">jonas@email.com</div>
+                            <div class="font-semibold">{{ invoice.customer.company_name }}</div>
+                            <div class="text-sm opacity-50">{{ invoice.customer.address }}</div>
                         </td>
-                        <td>Jan 1, 2025</td>
-                        <td class="font-semibold">€120.00</td>
+                        <td>{{ invoice.created_at }}</td>
+                        <td class="font-semibold">€{{ invoice.total_price }}</td>
                         <td>
                             <button class="btn btn-ghost btn-xs">View</button>
                         </td>
                     </tr>
-                    <tr class="hover">
-                        <td class="font-mono">#103</td>
-                        <td>
-                            <div class="font-semibold">UAB Baltika</div>
-                            <div class="text-sm opacity-50">info@baltika.lt</div>
-                        </td>
-                        <td>Jan 3, 2025</td>
-                        <td class="font-semibold">€64.00</td>
-                        <td>
-                            <button class="btn btn-ghost btn-xs">View</button>
-                        </td>
-                    </tr>
-                    <tr class="hover">
-                        <td class="font-mono">#104</td>
-                        <td>
-                            <div class="font-semibold">Mantas</div>
-                            <div class="text-sm opacity-50">mantas@email.com</div>
-                        </td>
-                        <td>Jan 4, 2025</td>
-                        <td class="font-semibold">€89.00</td>
-                        <td>
-                            <button class="btn btn-ghost btn-xs">View</button>
-                        </td>
-                    </tr>
+                    {% endfor  %}
                 </tbody>
             </table>
         </div>
