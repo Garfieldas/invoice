@@ -1,4 +1,4 @@
 from django.shortcuts import render
 
-def user_settings(request):
+def dashboard(request):
     return render(request, 'accounts/user_settings.html')

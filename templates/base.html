@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Invoice App</title>
+    <title>InvoiceGo</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>         
 </head>
@@ -13,126 +13,115 @@
 <div class="drawer lg:drawer-open">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
-        <div class="navbar bg-base-100 border-b border-base-300">
-            <div class="flex-none lg:hidden">
-                <label for="my-drawer" class="btn btn-square btn-ghost">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </label>
-            </div>
-
-            <div class="flex-1">
-                <h1 class="text-xl font-semibold">Dashboard</h1>
-            </div>
-
-            <div class="flex-none hidden lg:flex">
-                <button class="btn btn-primary btn-sm">New Invoice</button>
-
-                <div class="avatar ml-4">
-                    <div class="w-10 rounded-full">
-                        <img src="https://i.pravatar.cc/300" />
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include 'components/header.html' %}
         <div class="p-6 space-y-6">
+            <div>
+                <h1 class="text-3xl font-bold mb-2">Dashboard</h1>
+                <p class="text-base-content/60">Welcome back! Here's your overview.</p>
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="stats shadow bg-base-100">
                     <div class="stat">
+                        <div class="stat-figure text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        </div>
                         <div class="stat-title">Total Invoices</div>
                         <div class="stat-value text-primary">127</div>
+                        <div class="stat-desc">All time</div>
                     </div>
                 </div>
 
                 <div class="stats shadow bg-base-100">
                     <div class="stat">
+                        <div class="stat-figure text-success">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
                         <div class="stat-title">Paid This Month</div>
                         <div class="stat-value text-success">€1,420</div>
+                        <div class="stat-desc">↗︎ 12% increase</div>
                     </div>
                 </div>
 
                 <div class="stats shadow bg-base-100">
                     <div class="stat">
+                        <div class="stat-figure text-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
                         <div class="stat-title">Pending</div>
                         <div class="stat-value text-warning">6</div>
+                        <div class="stat-desc">Awaiting payment</div>
                     </div>
                 </div>
             </div>
+
             <div class="card bg-base-100 shadow">
                 <div class="card-body">
-                    <h2 class="card-title">Recent Invoices</h2>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="card-title">Recent Invoices</h2>
+                        <a href="#" class="btn btn-primary btn-sm">View All</a>
+                    </div>
 
                     <div class="overflow-x-auto">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Invoice #</th>
                                     <th>Customer</th>
                                     <th>Date</th>
                                     <th>Total</th>
                                     <th>Status</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>102</td>
-                                    <td>Jonas</td>
-                                    <td>2025-01-01</td>
-                                    <td>€120</td>
-                                    <td><span class="badge badge-success">Paid</span></td>
+                                <tr class="hover">
+                                    <td class="font-mono">#102</td>
+                                    <td>
+                                        <div class="font-semibold">Jonas</div>
+                                        <div class="text-sm opacity-50">jonas@email.com</div>
+                                    </td>
+                                    <td>Jan 1, 2025</td>
+                                    <td class="font-semibold">€120.00</td>
+                                    <td><span class="badge badge-success gap-2">Paid</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-xs">View</button>
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td>103</td>
-                                    <td>UAB Baltika</td>
-                                    <td>2025-01-03</td>
-                                    <td>€64</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
+                                <tr class="hover">
+                                    <td class="font-mono">#103</td>
+                                    <td>
+                                        <div class="font-semibold">UAB Baltika</div>
+                                        <div class="text-sm opacity-50">info@baltika.lt</div>
+                                    </td>
+                                    <td>Jan 3, 2025</td>
+                                    <td class="font-semibold">€64.00</td>
+                                    <td><span class="badge badge-warning gap-2">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-xs">View</button>
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td>104</td>
-                                    <td>Mantas</td>
-                                    <td>2025-01-04</td>
-                                    <td>€89</td>
-                                    <td><span class="badge badge-error">Overdue</span></td>
+                                <tr class="hover">
+                                    <td class="font-mono">#104</td>
+                                    <td>
+                                        <div class="font-semibold">Mantas</div>
+                                        <div class="text-sm opacity-50">mantas@email.com</div>
+                                    </td>
+                                    <td>Jan 4, 2025</td>
+                                    <td class="font-semibold">€89.00</td>
+                                    <td><span class="badge badge-error gap-2">Overdue</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-xs">View</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
     </div>
-    <div class="drawer-side">
-        <label for="my-drawer" class="drawer-overlay"></label>
-
-        <aside class="w-64 min-h-full bg-base-100 border-r border-base-300 shadow-lg">
-
-            <div class="p-4 text-2xl font-bold border-b border-base-300 flex items-center gap-2">
-                <span class="text-primary">📄</span> InvoiceApp
-            </div>
-
-            <nav class="p-4 space-y-1">
-                <a class="btn btn-ghost w-full justify-start">🏠 Dashboard</a>
-                <a class="btn btn-ghost w-full justify-start">🧾 All Invoices</a>
-                <a class="btn btn-ghost w-full justify-start">➕ Create Invoice</a>
-                <a class="btn btn-ghost w-full justify-start">👥 Customers</a>
-                <a class="btn btn-ghost w-full justify-start">⚙️ Settings</a>
-            </nav>
-
-            <div class="p-4 border-t border-base-300">
-                <button class="btn btn-outline btn-sm w-full">Logout</button>
-            </div>
-
-        </aside>
-    </div>
-
+    {% include 'components/navbar.html' %}
 </div>
 
 </body>
