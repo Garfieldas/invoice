@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def user_settings(request):
+    return render(request, 'accounts/user_settings.html')
