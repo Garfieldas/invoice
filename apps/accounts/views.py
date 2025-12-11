@@ -4,17 +4,25 @@ from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from django.db.models import QuerySet
 from django.contrib.auth.decorators import login_required
-from invoice.helpers.invoices import get_user_invoices, get_recent_invoices, get_invoices_count, calculate_total_amount_of_invoices
+from invoice.helpers.invoices import(
+    get_user_invoices,
+    get_recent_invoices, 
+    get_invoices_count, 
+    calculate_total_amount_of_invoices
+)
 from accounts.models import User
 
 @login_required
 def dashboard(request:HttpRequest)->HttpResponse:
     user: User = request.user
     invoices:Optional[QuerySet] = get_user_invoices(user)
+    total_price:Decimal = Decimal("0.00")
+    invoices_count: Optional[int] = 0
+    recent_invoices: Optional[QuerySet] = None
     if invoices:
-        total_price:Decimal = calculate_total_amount_of_invoices(invoices)
-        invoices_count:Optional[int] = get_invoices_count(invoices)
-        recent_invoices:Optional[QuerySet] = get_recent_invoices(user)
+        total_price = calculate_total_amount_of_invoices(invoices)
+        invoices_count = get_invoices_count(invoices)
+        recent_invoices = get_recent_invoices(user)
 
     context: dict = {
         "user": user,
