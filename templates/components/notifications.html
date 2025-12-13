@@ -1,0 +1,17 @@
+  {% if messages %}
+  <div class="space-y-3 mt-4" id="messages">
+    {% for message in messages %}
+      <div class="alert {% if 'error' in message.tags %}alert-error{% elif 'warning' in message.tags %}alert-warning{% elif 'success' in message.tags %}alert-success{% elif 'info' in message.tags %}alert-info{% else %}alert-info{% endif %}">
+        <div class="flex-1">
+          {{ message }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+<script>
+const messages = document.querySelector('#messages')
+if (messages){
+    setTimeout(() => messages.remove(), 3000)
+}
+</script>
