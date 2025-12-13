@@ -12,12 +12,16 @@
 
 <div class="drawer lg:drawer-open">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content flex flex-col">
+
+    <div class="drawer-content flex flex-col min-h-screen">
         {% include 'components/header.html' %}
-        {% block content %}
-        {% endblock %}
-        </div>
+
+        <main class="flex-1">
+            {% block content %}
+            {% endblock %}
+        </main>
     </div>
+
     {% include 'components/navbar.html' %}
 </div>
 
