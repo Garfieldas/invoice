@@ -11,16 +11,18 @@ class Invoice(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
     invoice_number = models.PositiveIntegerField(blank=True, null=True)
     due_date = models.DateField(blank=True, null=True, help_text="Date until customer should pay")
-    created_at = models.DateField(auto_now=True)
+    created_at = models.DateTimeField(auto_now=True)
 
     def generate_invoice_number(self):
         """
         AutoIncrement invoice numbers according to the last one
         """
+        if self.invoice_number:
+            return
         last_invoice = (
             Invoice.objects
             .filter(user=self.user)
-            .order_by('-created_at')
+            .order_by('-invoice_number')
             .first()
         )
         if not last_invoice:
@@ -34,14 +36,17 @@ class Invoice(models.Model):
         Assign 15 days from creation date
         Assign current date for created at field before model save
         """
-        today = timezone.now().date()
-        self.created_at = today
-        self.pay_until = self.created_at + timedelta(days=15)
+        if self.due_date:
+            return
+        
+        if not self.created_at:
+            today = timezone.now().date()
+            self.created_at = today
+        self.due_date = self.created_at + timedelta(days=15)
 
     def save(self, *args, update=False, **kwargs):
         if not update:
-            if not self.due_date:
-                self.generate_pay_until_date()
+            self.generate_pay_until_date()
             self.generate_invoice_number()
         super().save(*args, **kwargs)
 
