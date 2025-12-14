@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+        <div class="overflow-x-auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Company</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for company in companies %}
+                    <tr class="hover">
+                        <td class="font-semibold">#</td>
+                        <td class="font-mono">{{ company.company_name }}</td>
+                        <td>
+                            <button class="btn btn-ghost btn-xs">View</button>
+                        </td>
+                    </tr>
+                    {% endfor  %}
+                </tbody>
+            </table>
+        </div>

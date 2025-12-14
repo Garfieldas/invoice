@@ -1,6 +1,8 @@
 from django.db import models
+from accounts.models import User
 
 class Customer(models.Model):
+    provider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='clients', null=True)
     first_name = models.CharField(max_length=255, blank=False)
     last_name = models.CharField(max_length=255, blank=False)
     company_name = models.CharField(max_length=255, blank=False)
