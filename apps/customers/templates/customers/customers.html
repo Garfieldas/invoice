@@ -1,23 +1,14 @@
 {% extends 'base.html' %}
-        <div class="overflow-x-auto">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Company</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for company in companies %}
-                    <tr class="hover">
-                        <td class="font-semibold">#</td>
-                        <td class="font-mono">{{ company.company_name }}</td>
-                        <td>
-                            <button class="btn btn-ghost btn-xs">View</button>
-                        </td>
-                    </tr>
-                    {% endfor  %}
-                </tbody>
-            </table>
-        </div>
+{% block content %}
+<div class="p-6 max-w-3xl mx-auto">
+  <div class="mb-6 text-center">
+    <h1 class="text-3xl font-bold">Customers</h1>
+  </div>
+<div class="bg-base-100 shadow mt-[100px]">
+  {% if customers %}
+{% include 'customers/partials/customer_table.html' %}
+{% else %}
+<h3>No customers created</h3>
+{% endif %}
+</div>
+{% endblock %}

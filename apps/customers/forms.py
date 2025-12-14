@@ -14,3 +14,8 @@ class CustomerForm(forms.ModelForm):
             'address': forms.Select(attrs={'class': 'select select-bordered w-full'}),
             'phone_number': forms.TelInput(attrs={'class': 'input input-bordered w-full', 'type': 'tel'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        provider = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.provider = provider
