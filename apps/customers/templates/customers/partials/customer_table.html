@@ -13,7 +13,7 @@
         <td class="font-semibold">{{ forloop.counter }}</td>
         <td class="font-mono">{{ customer.company_name }}</td>
         <td>
-          <button class="btn btn-ghost btn-xs">View</button>
+          <a class="btn btn-ghost btn-xs" href="{% url 'customer_details' customer.pk %}">View</a>
         </td>
       </tr>
       {% endfor %}

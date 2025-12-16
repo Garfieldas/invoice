@@ -11,7 +11,7 @@ class CustomerForm(forms.ModelForm):
             'company_name': forms.TextInput(attrs={'class': 'input input-bordered w-full'}),
             'company_code': forms.TextInput(attrs={'class': 'input input-bordered w-full'}),
             'vat_code': forms.TextInput(attrs={'class': 'input input-bordered w-full'}),
-            'address': forms.Select(attrs={'class': 'select select-bordered w-full'}),
+            'address': forms.TextInput(attrs={'class': 'input select-bordered w-full'}),
             'phone_number': forms.TelInput(attrs={'class': 'input input-bordered w-full', 'type': 'tel'}),
         }
 
@@ -19,3 +19,11 @@ class CustomerForm(forms.ModelForm):
         provider = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         self.provider = provider
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.provider:
+            instance.provider = self.provider
+        if commit:
+            instance.save()
+        return instance

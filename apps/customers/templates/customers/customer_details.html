@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="p-6 max-w-3xl mx-auto">
+    <div class="mb-6 text-center">
+        {% if update %}
+        <h1 class="text-3xl font-bold">Customer details</h1>
+        <p class="text-sm text-base-content/60">Edit customer information or delete the customer.</p>
+        {% else %}
+        <h1 class="text-3xl font-bold">Customer creation</h1>
+        <p class="text-sm text-base-content/60">All fields are required!</p>
+        {% endif %}
+    </div>
+    {% include 'customers/partials/customer_form.html' %}
+    {% if update %}
+    <form method="post" class="m-0" action="{% url 'customer_delete' customer_pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-error btn">Delete</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

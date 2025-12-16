@@ -1,14 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <div class="p-6 max-w-3xl mx-auto">
-  <div class="mb-6 text-center">
-    <h1 class="text-3xl font-bold">Customers</h1>
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold">Customers</h1>
+      <p class="text-sm text-base-content/60">Manage your customers</p>
+    </div>
+    <div>
+      <a href="{% url 'customer_create' %}" class="btn btn-primary gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Add customer
+      </a>
+    </div>
   </div>
-<div class="bg-base-100 shadow mt-[100px]">
-  {% if customers %}
-{% include 'customers/partials/customer_table.html' %}
-{% else %}
-<h3>No customers created</h3>
-{% endif %}
+
+  <div class="bg-base-100 shadow">
+    {% if customers %}
+      {% include 'customers/partials/customer_table.html' %}
+    {% else %}
+      <div class="p-8 text-center">
+        <h3 class="text-xl font-semibold mb-2">No customers yet</h3>
+        <p class="text-sm text-base-content/60 mb-4">Create customers to quickly generate invoices and keep contacts organized.</p>
+      </div>
+    {% endif %}
+  </div>
 </div>
+
 {% endblock %}
