@@ -18,7 +18,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex flex-col">
           <label for="{{ form.individual_code.id_for_label }}" class="label">
-            <span class="label-text text-sm font-semibold">Individual code</span>
+            <span class="label-text text-sm font-semibold">{{ form.individual_code.label }}</span>
           </label>
           {{ form.individual_code }}
           {% if form.individual_code.errors %}
@@ -28,7 +28,7 @@
 
         <div class="flex flex-col">
           <label for="{{ form.activity_start_date.id_for_label }}" class="label">
-            <span class="label-text text-sm font-semibold">Activity start date</span>
+            <span class="label-text text-sm font-semibold">{{ form.activity_start_date.label }}</span>
           </label>
           {{ form.activity_start_date }}
           {% if form.activity_start_date.errors %}
@@ -38,7 +38,7 @@
 
         <div class="md:col-span-2 flex flex-col">
           <label for="{{ form.address.id_for_label }}" class="label">
-            <span class="label-text text-sm font-semibold">Address</span>
+            <span class="label-text text-sm font-semibold">{{ form.address.label }}</span>
           </label>
           {{ form.address }}
           {% if form.address.errors %}
@@ -48,7 +48,7 @@
 
         <div class="flex flex-col">
           <label for="{{ form.phone_number.id_for_label }}" class="label">
-            <span class="label-text text-sm font-semibold">Phone number</span>
+            <span class="label-text text-sm font-semibold">{{ form.phone_number.label }}</span>
           </label>
           {{ form.phone_number }}
           {% if form.phone_number.errors %}
@@ -58,7 +58,7 @@
 
         <div class="flex flex-col">
           <label for="{{ form.bank_name.id_for_label }}" class="label">
-            <span class="label-text text-sm font-semibold">Bank</span>
+            <span class="label-text text-sm font-semibold">{{ form.bank_name.label }}</span>
           </label>
           {{ form.bank_name }}
           {% if form.bank_name.errors %}
@@ -68,7 +68,7 @@
 
         <div class="md:col-span-2 flex flex-col">
           <label for="{{ form.iban.id_for_label }}" class="label">
-            <span class="label-text text-sm font-semibold">IBAN</span>
+            <span class="label-text text-sm font-semibold">{{ form.iban.label }}</span>
           </label>
           {{ form.iban }}
           {% if form.iban.errors %}
