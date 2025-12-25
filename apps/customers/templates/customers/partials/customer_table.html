@@ -1,0 +1,22 @@
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Company</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for customer in customers %}
+      <tr class="hover">
+        <td class="font-semibold">{{ forloop.counter }}</td>
+        <td class="font-mono">{{ customer.company_name }}</td>
+        <td>
+          <a class="btn btn-ghost btn-xs" href="{% url 'customer_details' customer.pk %}">View</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

@@ -1,13 +1,13 @@
 from typing import Optional
-from decimal import Decimal
 from django.shortcuts import render
+from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
 from django.db.models import QuerySet
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from invoice.helpers.invoices import(
     get_user_invoices,
-    calculate_total_sum__and_count_of_invoices
+    calculate_total_sum_and_count_of_invoices
 )
 from accounts.models import User, SelfInfo
 from accounts.forms.self_info_form import SelfInfoForm
@@ -19,7 +19,7 @@ def dashboard(request:HttpRequest)->HttpResponse:
     invoices_total:dict = {}
     recent_invoices: Optional[QuerySet] = None
     if invoices:
-        invoices_total = calculate_total_sum__and_count_of_invoices(invoices)
+        invoices_total = calculate_total_sum_and_count_of_invoices(invoices)
         recent_invoices = invoices[:5]
 
     context: dict = {
@@ -38,17 +38,18 @@ def self_info(request:HttpRequest)->HttpResponse:
         self_info: Optional[SelfInfo] = SelfInfo.objects.get(user=user)
     except SelfInfo.DoesNotExist:
         pass
+    context: dict = {
+        "title": "Profile settings",
+        "description": "Additional information for invoice generation",
+        "url": reverse("dashboard")
+    }
     if request.method == "POST":
         form: SelfInfoForm = SelfInfoForm(request.POST, instance=self_info)
         if form.is_valid():
             form.save()
             messages.success(request, 'Information updated successfully!')
-            context: dict = {"form": form}
-            return render(request, 'settings/self_info.html', context)
-        else:
-            context: dict = {"form": form}
-            return render(request, 'settings/self_info.html', context)
-    form: SelfInfoForm = SelfInfoForm(instance=self_info)
-    context: dict = {"form": form}
-    return render(request, 'settings/self_info.html', context)
+    else:
+        form: SelfInfoForm = SelfInfoForm(instance=self_info)
+    context["form"] = form
+    return render(request, 'components/base_form.html', context)
 
