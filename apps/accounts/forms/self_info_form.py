@@ -20,11 +20,3 @@ class SelfInfoForm(forms.ModelForm):
             'bank_name': forms.Select(attrs={'class': 'select select-bordered w-full'}),
             'iban': forms.TextInput(attrs={'class': 'input input-bordered w-full'}),
         }
-        label = {
-            'individual_code': 'Individual code',
-            'activity_start_date': 'Activity start date',
-            'address': 'Address',
-            'phone_number': 'Phone number',
-            'bank_name': 'Bank',
-            'iban': 'Bank account number'
-        }

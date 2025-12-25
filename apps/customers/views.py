@@ -1,6 +1,7 @@
 from typing import Optional
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.db.models import QuerySet
@@ -24,7 +25,11 @@ def customer_details(request:HttpRequest, customer_pk:str)->HttpResponse:
         customer = get_object_or_404(Customer, pk=customer_pk)
     except Customer.DoesNotExist:
         print(f"Failed to get customer {customer_pk}")
-
+    context: dict = {
+        "title": "Customer details",
+        "description": "Edit customer information or delete the customer.",
+        "url": reverse("customers")
+    }
     if request.method == "POST":
         form: CustomerForm = CustomerForm(request.POST, instance=customer)
         if form.is_valid():
@@ -33,12 +38,8 @@ def customer_details(request:HttpRequest, customer_pk:str)->HttpResponse:
     else:
         form = CustomerForm(instance=customer)
 
-    context:dict = {
-        "form": form,
-        "customer_pk": customer.pk,
-        "update": True,
-    }
-    return render(request, 'customers/customer_details.html', context)
+    context["form"] = form
+    return render(request, 'components/base_form.html', context)
 
 @login_required
 def delete_customer(request:HttpRequest, customer_pk:str)->HttpResponse:
@@ -54,6 +55,11 @@ def delete_customer(request:HttpRequest, customer_pk:str)->HttpResponse:
 @login_required
 def create_customer(request:HttpRequest)->HttpResponse:
     user = request.user
+    context: dict = {
+        "title": "Customer creation",
+        "description": "All fields are required!",
+        "url": reverse("customers")
+    }
     if request.method == "POST":
         form = CustomerForm(request.POST, user=user)
         if form.is_valid():
@@ -62,7 +68,5 @@ def create_customer(request:HttpRequest)->HttpResponse:
             return redirect('customers')
     else:
         form = CustomerForm(user=user)
-    context: dict = {
-        "form": form
-    }
-    return render(request, 'customers/customer_details.html', context)
+    context["form"] = form
+    return render(request, 'components/base_form.html', context)

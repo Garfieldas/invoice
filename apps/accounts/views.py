@@ -1,6 +1,6 @@
 from typing import Optional
-from decimal import Decimal
 from django.shortcuts import render
+from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
 from django.db.models import QuerySet
 from django.contrib import messages
@@ -38,17 +38,22 @@ def self_info(request:HttpRequest)->HttpResponse:
         self_info: Optional[SelfInfo] = SelfInfo.objects.get(user=user)
     except SelfInfo.DoesNotExist:
         pass
+    context: dict = {
+        "title": "Profile settings",
+        "description": "Additional information for invoice generation",
+        "url": reverse("dashboard")
+    }
     if request.method == "POST":
         form: SelfInfoForm = SelfInfoForm(request.POST, instance=self_info)
         if form.is_valid():
             form.save()
             messages.success(request, 'Information updated successfully!')
-            context: dict = {"form": form}
-            return render(request, 'settings/self_info.html', context)
+            context["form"] = form
+            return render(request, 'components/base_form.html', context)
         else:
             context: dict = {"form": form}
             return render(request, 'settings/self_info.html', context)
     form: SelfInfoForm = SelfInfoForm(instance=self_info)
-    context: dict = {"form": form}
-    return render(request, 'settings/self_info.html', context)
+    context["form"] = form
+    return render(request, 'components/base_form.html', context)
 
