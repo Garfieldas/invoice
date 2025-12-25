@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from invoice.helpers.invoices import(
     get_user_invoices,
-    calculate_total_sum__and_count_of_invoices
+    calculate_total_sum_and_count_of_invoices
 )
 from accounts.models import User, SelfInfo
 from accounts.forms.self_info_form import SelfInfoForm
@@ -19,7 +19,7 @@ def dashboard(request:HttpRequest)->HttpResponse:
     invoices_total:dict = {}
     recent_invoices: Optional[QuerySet] = None
     if invoices:
-        invoices_total = calculate_total_sum__and_count_of_invoices(invoices)
+        invoices_total = calculate_total_sum_and_count_of_invoices(invoices)
         recent_invoices = invoices[:5]
 
     context: dict = {

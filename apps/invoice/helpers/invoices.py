@@ -13,7 +13,7 @@ def get_user_invoices(user: User)->Optional[QuerySet]:
         return invoices
     return None
 
-def calculate_total_sum__and_count_of_invoices(invoices:Optional[QuerySet])->dict:
+def calculate_total_sum_and_count_of_invoices(invoices:Optional[QuerySet])->dict:
     """
     Simple function to calculate sum and count of all invoices
     """
