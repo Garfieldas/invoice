@@ -48,12 +48,8 @@ def self_info(request:HttpRequest)->HttpResponse:
         if form.is_valid():
             form.save()
             messages.success(request, 'Information updated successfully!')
-            context["form"] = form
-            return render(request, 'components/base_form.html', context)
-        else:
-            context: dict = {"form": form}
-            return render(request, 'settings/self_info.html', context)
-    form: SelfInfoForm = SelfInfoForm(instance=self_info)
+    else:
+        form: SelfInfoForm = SelfInfoForm(instance=self_info)
     context["form"] = form
     return render(request, 'components/base_form.html', context)
 

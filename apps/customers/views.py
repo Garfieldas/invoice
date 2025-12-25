@@ -28,7 +28,9 @@ def customer_details(request:HttpRequest, customer_pk:str)->HttpResponse:
     context: dict = {
         "title": "Customer details",
         "description": "Edit customer information or delete the customer.",
-        "url": reverse("customers")
+        "url": reverse("customers"),
+        "update": True,
+        "delete_url": reverse('customer_delete', args=[customer.pk])
     }
     if request.method == "POST":
         form: CustomerForm = CustomerForm(request.POST, instance=customer)
