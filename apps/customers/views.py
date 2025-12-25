@@ -52,7 +52,9 @@ def delete_customer(request:HttpRequest, customer_pk:str)->HttpResponse:
 
     messages.success(request, "Customer deleted successfully")
     customer.delete()
-    return redirect('customers')
+    response:HttpResponse = HttpResponse("", status=200)
+    response["HX-Redirect"] = reverse('customers')
+    return response
 
 @login_required
 def create_customer(request:HttpRequest)->HttpResponse:
