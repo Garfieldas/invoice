@@ -1,0 +1,41 @@
+<div class="card bg-base-200 p-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Name</span>
+            </label>
+            {{ item_form.name }}
+            {% if item_form.name.errors %}
+            <p class="text-error text-sm">{{ item_form.name.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Price</span>
+            </label>
+            {{ item_form.price }}
+            {% if item_form.price.errors %}
+            <p class="text-error text-sm">{{ item_form.price.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Amount</span>
+            </label>
+            {{ item_form.amount }}
+            {% if item_form.amount.errors %}
+            <p class="text-error text-sm">{{ item_form.amount.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Unit</span>
+            </label>
+            {{ item_form.unit }}
+            {% if item_form.unit.errors %}
+            <p class="text-error text-sm">{{ item_form.unit.errors }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
