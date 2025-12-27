@@ -24,6 +24,7 @@ class InvoiceForm(forms.ModelForm):
         customer = self.cleaned_data.get('customer', None)
         if not customer:
             raise ValidationError('customer is required!')
+        return customer
 
     def save(self, commit=True):
         instance = super().save(commit=False)
