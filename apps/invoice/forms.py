@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory
-from invoice.models import Invoice, InvoiceItem
+from django.core.exceptions import ValidationError
+from invoice.models import Invoice, InvoiceItem, Customer
 
 class InvoiceForm(forms.ModelForm):
 
@@ -17,6 +18,12 @@ class InvoiceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
+        self.fields['customer'].queryset = Customer.objects.filter(provider=self.user)
+
+    def clean_customer(self):
+        customer = self.cleaned_data.get('customer', None)
+        if not customer:
+            raise ValidationError('customer is required!')
 
     def save(self, commit=True):
         instance = super().save(commit=False)
