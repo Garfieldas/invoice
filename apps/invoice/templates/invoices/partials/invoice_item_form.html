@@ -1,7 +1,10 @@
 <div class="card bg-base-200 p-4 invoice-item relative">
-    <div class="hidden">
-    {{ item_form.DELETE }}
-    </div>
+<div class="absolute top-2 right-2">
+    <label class="label cursor-pointer gap-2">
+        {{ item_form.DELETE }}
+        <span class="label-text text-error font-semibold">Remove</span>
+    </label>
+</div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="form-control">
@@ -44,14 +47,4 @@
             {% endif %}
         </div>
     </div>
-    {% if not forloop.first %}
-    <div class="flex justify-end mt-4">
-        <button
-            type="button"
-            class="btn btn-sm btn-error delete-item-btn"
-        >
-            Remove item
-        </button>
-    </div>
-    {% endif %}
 </div>
