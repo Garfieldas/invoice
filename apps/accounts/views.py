@@ -16,7 +16,7 @@ from accounts.forms.self_info_form import SelfInfoForm
 def dashboard(request:HttpRequest)->HttpResponse:
     user: User = request.user # type: ignore
     invoices:Optional[QuerySet] = get_user_invoices(user)
-    invoices_total:dict = {}
+    invoices_total:dict = {"total_price": 0, "count": 0}
     recent_invoices: Optional[QuerySet] = None
     if invoices:
         invoices_total = calculate_total_sum_and_count_of_invoices(invoices)

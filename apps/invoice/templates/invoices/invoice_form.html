@@ -37,13 +37,21 @@
 
       <div>
         <h2 class="text-lg font-semibold mb-4">Invoice items</h2>
-
+        <div class="flex justify-end mb-5">
+        <button
+        class="btn btn-outline btn-sm"
+        type="button">
+        Add item
+        </button>
+      </div>
         {{ formset.management_form }}
 
         <div id="invoice-items" class="space-y-4">
 
           {% for item_form in formset %}
+          <div class="{% if not forloop.first %} hidden {% endif%}invoice-item">
           {% include 'invoices/partials/invoice_item_form.html' %}
+          </div>
           {% endfor %}
 
         </div>

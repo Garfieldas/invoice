@@ -41,11 +41,3 @@ def create_invoice(request: HttpRequest) -> HttpResponse:
     context["form"] = form
     context["formset"] = formset
     return render(request, "invoices/invoice_form.html", context)
-
-@login_required
-def add_new_invoice_item(request: HttpRequest) -> HttpResponse:
-    form = InvoiceItemForm()
-    context: dict = {
-        "item_form": form,
-    }
-    return render(request, "invoices/partials/invoice_item_form.html", context)

@@ -15,18 +15,15 @@ class InvoiceForm(forms.ModelForm):
 
     
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
+        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.user = user
 
     def save(self, commit=True):
         instance = super().save(commit=False)
         if self.user:
             instance.user = self.user
-        if commit:
-            instance.save()
+        instance.save()
         return instance
-
 
 
 class InvoiceItemForm(forms.ModelForm):
@@ -43,24 +40,17 @@ class InvoiceItemForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        invoice = kwargs.pop('invoice', None)
+        self.invoice = kwargs.pop('invoice', None)
         super().__init__(*args, **kwargs)
-        self.invoice = invoice
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        if self.invoice:
-            instance.invoice = self.invoice
-        elif getattr(self.instance, "invoice", None):
-            instance.invoice = self.instance.invoice
-        if commit:
-            instance.save()
-        return instance
+        for field in self.fields:
+            self.fields[field].required = True
     
 InvoiceItemFormset = inlineformset_factory(
     parent_model=Invoice,
     model=InvoiceItem,
     form = InvoiceItemForm,
-    extra = 1,
-    can_delete=True
+    extra = 5,
+    min_num=1,
+    can_delete=True,
+    validate_min=True,
 )

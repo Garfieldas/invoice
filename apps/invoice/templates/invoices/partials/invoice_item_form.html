@@ -1,4 +1,7 @@
-<div class="card bg-base-200 p-4">
+<div class="card bg-base-200 p-4 invoice-item relative">
+    <div class="hidden">
+    {{ item_form.DELETE }}
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="form-control">
@@ -10,6 +13,7 @@
             <p class="text-error text-sm">{{ item_form.name.errors }}</p>
             {% endif %}
         </div>
+
         <div class="form-control">
             <label class="label">
                 <span class="label-text">Price</span>
@@ -19,6 +23,7 @@
             <p class="text-error text-sm">{{ item_form.price.errors }}</p>
             {% endif %}
         </div>
+
         <div class="form-control">
             <label class="label">
                 <span class="label-text">Amount</span>
@@ -28,6 +33,7 @@
             <p class="text-error text-sm">{{ item_form.amount.errors }}</p>
             {% endif %}
         </div>
+
         <div class="form-control">
             <label class="label">
                 <span class="label-text">Unit</span>
@@ -37,5 +43,13 @@
             <p class="text-error text-sm">{{ item_form.unit.errors }}</p>
             {% endif %}
         </div>
+    </div>
+    <div class="flex justify-end mt-4">
+        <button
+            type="button"
+            class="btn btn-sm btn-error delete-item-btn"
+        >
+            Remove item
+        </button>
     </div>
 </div>
