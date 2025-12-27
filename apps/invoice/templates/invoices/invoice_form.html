@@ -39,6 +39,7 @@
         <h2 class="text-lg font-semibold mb-4">Invoice items</h2>
         <div class="flex justify-end mb-5">
         <button
+        id="add-item"
         class="btn btn-outline btn-sm"
         type="button">
         Add item
@@ -69,5 +70,38 @@
   {% include "partials/notifications.html" %}
 
 </div>
+<script>
+  addItemBtn = document.querySelector('#add-item')
+  removeItemBtn = Array.from(document.querySelectorAll('.btn.btn-sm.btn-error.delete-item-btn'))
+  hiddenForms = Array.from(document.querySelectorAll('.hidden.invoice-item'))
 
+  const addForm = () => {
+    if (hiddenForms.length > 0) {
+      form = hiddenForms[0]
+      form.classList.remove("hidden")
+      hiddenForms.shift()
+      return;
+    }
+    addItemBtn.classList.add('btn-disabled')
+  }
+
+  const removeForm = (e) => {
+    const target = e.target
+    const invoiceItem = target.closest('.invoice-item')
+    invoiceItem.classList.add("hidden")
+    hiddenForms.push(invoiceItem)
+    if (hiddenForms.length > 0 && addItemBtn.classList.contains('btn-disabled')){
+      addItemBtn.classList.remove('btn-disabled')
+    }
+  }
+
+  addItemBtn.addEventListener("click", () => {
+      addForm()
+  })
+
+  removeItemBtn.forEach((item) => {
+    item.addEventListener("click", removeForm)
+  })
+
+</script>
 {% endblock %}
