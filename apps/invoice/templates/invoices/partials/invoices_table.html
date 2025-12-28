@@ -6,18 +6,21 @@
         <th>Customer</th>
         <th>Price</th>
         <th>Created</th>
+        <th>Due to date</th>
         <th>Details</th>
       </tr>
     </thead>
     <tbody>
       {% for invoice in invoices %}
       <tr class="hover">
-        <td class="font-mono">{{ invoice.invoice_number }}</td>
+        <td class="font-mono">{{ invoice.invoice_number_display }}</td>
         <td class="font-mono">{{ invoice.customer }}</td>
         <td class="font-mono">{{ invoice.total_price }}</td>
         <td class="font-mono">{{ invoice.created_at|date:"Y-m-d" }}</td>
+        <td class="font-mono">{{ invoice.due_date|date:"Y-m-d" }}</td>
         <td>
           <a class="btn btn-ghost btn-xs" href="{% url 'invoice-details' invoice.pk %}">View</a>
+          <a class="btn btn-ghost btn-xs" href="{% url 'invoice_pdf' invoice.pk %}">Create PDF</a>
         </td>
       </tr>
       {% endfor %}

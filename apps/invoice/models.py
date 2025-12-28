@@ -50,6 +50,10 @@ class Invoice(models.Model):
             self.generate_invoice_number()
         super().save(*args, **kwargs)
 
+    @property
+    def invoice_number_display(self):
+        return str(self.invoice_number).zfill(6)
+
     def __str__(self):
         return f"{self.user.full_name} - {self.invoice_number}"
     

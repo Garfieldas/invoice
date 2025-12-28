@@ -172,7 +172,7 @@
 
     <div class="title">
       <h1>SĄSKAITA FAKTŪRA</h1>
-      <div class="series">Serija AA Nr. <strong>{{ invoice.invoice_number }}</strong></div>
+      <div class="series">Serija AA Nr. <strong>{{ invoice.invoice_number_display }}</strong></div>
     </div>
 
     <div class="meta">
@@ -226,7 +226,7 @@
       <tr>
         <td>{{ item.name }}</td>
         <td class="qty">{{ item.amount }}</td>
-        <td class="unit">{{ item.unit }}</td>
+        <td class="unit">{{ item.get_unit_display }}</td>
         <td class="price">{{ item.price }} €</td>
         <td class="sum">{{ item.total_price }} €</td>
       </tr>
@@ -235,7 +235,7 @@
   </table>
 
   <div class="muted" style="margin-top:10px">
-    Bendra suma žodžiais: {{ invoice.total_price_words }}
+    Bendra suma žodžiais: {{ amount_words }}
   </div>
 
 

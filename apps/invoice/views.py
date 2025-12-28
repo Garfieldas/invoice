@@ -11,6 +11,7 @@ from invoice.models import Invoice, InvoiceItem
 from accounts.models import User, SelfInfo
 from invoice.forms import InvoiceForm, InvoiceItemFormset
 from invoice.helpers.invoice_items import get_invoice_items
+from invoice.helpers.invoices import amount_to_words_lt
 from weasyprint import HTML
 
 @login_required
@@ -119,12 +120,14 @@ def create_invoice_pdf(request:HttpRequest, invoice_pk:str):
     except Exception as e:
         print(e)
         pass
+    amount_words = amount_to_words_lt(invoice.total_price)
     context: dict = {
         "user": user,
         "invoice": invoice,
         "customer": customer,
         "self_info": self_info,
-        "invoice_items": invoice_items
+        "invoice_items": invoice_items,
+        "amount_words": amount_words
     }
     html_to_string = render_to_string("components/invoice_to_pdf.html", context)
     pdf = HTML(string=html_to_string).write_pdf()
