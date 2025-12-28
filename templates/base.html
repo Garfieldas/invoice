@@ -15,15 +15,18 @@
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
 
     <div class="drawer-content flex flex-col min-h-screen">
+        {% if user.is_authenticated %}
         {% include 'partials/header.html' %}
+        {% endif %}
 
         <main class="flex-1">
             {% block content %}
             {% endblock %}
         </main>
     </div>
-
+    {% if user.is_authenticated %}
     {% include 'partials/navbar.html' %}
+    {% endif %}
 </div>
 
 </body>
