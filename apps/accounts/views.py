@@ -16,7 +16,7 @@ from accounts.forms.self_info_form import SelfInfoForm
 def dashboard(request:HttpRequest)->HttpResponse:
     user: User = request.user # type: ignore
     invoices:Optional[QuerySet] = get_user_invoices(user)
-    invoices_total:dict = {}
+    invoices_total:dict = {"total_price": 0, "count": 0}
     recent_invoices: Optional[QuerySet] = None
     if invoices:
         invoices_total = calculate_total_sum_and_count_of_invoices(invoices)
@@ -26,7 +26,7 @@ def dashboard(request:HttpRequest)->HttpResponse:
         "user": user,
         "total_price": invoices_total["total_price"],
         "invoices_count": invoices_total["count"],
-        "recent_invoices": recent_invoices
+        "invoices": recent_invoices
     }
 
     return render(request, 'dashboard/dashboard.html', context)
@@ -51,5 +51,5 @@ def self_info(request:HttpRequest)->HttpResponse:
     else:
         form: SelfInfoForm = SelfInfoForm(instance=self_info)
     context["form"] = form
-    return render(request, 'components/base_form.html', context)
+    return render(request, 'components/base_details_page.html', context)
 

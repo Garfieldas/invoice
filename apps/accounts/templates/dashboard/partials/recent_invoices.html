@@ -2,37 +2,8 @@
     <div class="card-body">
         <div class="flex justify-between items-center mb-4">
             <h2 class="card-title">Recent Invoices</h2>
-            <a href="#" class="btn btn-primary btn-sm">View All</a>
+            <a href="{% url 'invoices' %}" class="btn btn-primary btn-sm">View All</a>
         </div>
-
-        <div class="overflow-x-auto">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Invoice #</th>
-                        <th>Customer</th>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for invoice in recent_invoices %}
-                    <tr class="hover">
-                        <td class="font-mono">{{ invoice.invoice_number }}</td>
-                        <td>
-                            <div class="font-semibold">{{ invoice.customer.company_name }}</div>
-                            <div class="text-sm opacity-50">{{ invoice.customer.address }}</div>
-                        </td>
-                        <td>{{ invoice.created_at }}</td>
-                        <td class="font-semibold">€{{ invoice.total_price }}</td>
-                        <td>
-                            <button class="btn btn-ghost btn-xs">View</button>
-                        </td>
-                    </tr>
-                    {% endfor  %}
-                </tbody>
-            </table>
-        </div>
+        {% include 'invoices/partials/invoices_table.html' %}
     </div>
 </div>

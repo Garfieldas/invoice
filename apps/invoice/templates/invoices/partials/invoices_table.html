@@ -1,0 +1,26 @@
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Invoice number</th>
+        <th>Customer</th>
+        <th>Price</th>
+        <th>Created</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for invoice in invoices %}
+      <tr class="hover">
+        <td class="font-mono">{{ invoice.invoice_number }}</td>
+        <td class="font-mono">{{ invoice.customer }}</td>
+        <td class="font-mono">{{ invoice.total_price }}</td>
+        <td class="font-mono">{{ invoice.created_at|date:"Y-m-d" }}</td>
+        <td>
+          <a class="btn btn-ghost btn-xs" href="{% url 'invoice-details' invoice.pk %}">View</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

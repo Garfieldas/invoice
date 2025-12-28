@@ -41,7 +41,7 @@ def customer_details(request:HttpRequest, customer_pk:str)->HttpResponse:
         form = CustomerForm(instance=customer)
 
     context["form"] = form
-    return render(request, 'components/base_form.html', context)
+    return render(request, 'components/base_details_page.html', context)
 
 @login_required
 def delete_customer(request:HttpRequest, customer_pk:str)->HttpResponse:
@@ -67,10 +67,11 @@ def create_customer(request:HttpRequest)->HttpResponse:
     if request.method == "POST":
         form = CustomerForm(request.POST, user=user)
         if form.is_valid():
+            customer = form.save()
             form.save()
             messages.success(request, 'Customer successfully added!')
-            return redirect('customers')
+            return redirect('customer_details', customer_pk=customer.pk)
     else:
         form = CustomerForm(user=user)
     context["form"] = form
-    return render(request, 'components/base_form.html', context)
+    return render(request, 'components/base_details_page.html', context)
