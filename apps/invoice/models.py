@@ -65,5 +65,9 @@ class InvoiceItem(models.Model):
     unit = models.CharField(choices=UNITS, max_length=10, blank=False)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='invoice_items')
 
+    @property
+    def total_price(self):
+        return self.price * self.amount
+
     def __str__(self):
         return f"{self.name} - {self.price} - {self.unit}"

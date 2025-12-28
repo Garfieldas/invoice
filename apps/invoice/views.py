@@ -4,11 +4,14 @@ from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 from django.db.models import QuerySet
 from invoice.helpers.invoices import get_user_invoices
-from invoice.models import Invoice
-from accounts.models import User
-from invoice.forms import InvoiceForm, InvoiceItemFormset, InvoiceItemForm
+from invoice.models import Invoice, InvoiceItem
+from accounts.models import User, SelfInfo
+from invoice.forms import InvoiceForm, InvoiceItemFormset
+from invoice.helpers.invoice_items import get_invoice_items
+from weasyprint import HTML
 
 @login_required
 def invoices(request: HttpRequest)->HttpResponse:
@@ -83,4 +86,48 @@ def delete_invoice(request:HttpRequest, invoice_pk:str)->HttpResponse:
     invoice.delete()
     response:HttpResponse = HttpResponse("", status=200)
     response["HX-Redirect"] = reverse('invoices')
+    return response
+
+@login_required
+def pdf_template(request:HttpRequest, invoice_pk:str):
+    try:
+        user: User = request.user # type: ignore
+        invoice:Invoice = Invoice.objects.select_related('customer').get(pk=invoice_pk)
+        invoice_items:Optional[QuerySet] = get_invoice_items(invoice)
+        self_info:SelfInfo = SelfInfo.objects.get(user=user)
+        customer = invoice.customer
+    except Exception as e:
+        print(e)
+        pass
+    context: dict = {
+        "user": user,
+        "invoice": invoice,
+        "customer": customer,
+        "self_info": self_info,
+        "invoice_items": invoice_items
+    }
+    return render(request, "components/invoice_to_pdf.html", context)
+
+@login_required
+def create_invoice_pdf(request:HttpRequest, invoice_pk:str):
+    try:
+        user: User = request.user # type: ignore
+        invoice:Invoice = Invoice.objects.select_related('customer').get(pk=invoice_pk)
+        invoice_items:Optional[QuerySet] = get_invoice_items(invoice)
+        self_info:SelfInfo = SelfInfo.objects.get(user=user)
+        customer = invoice.customer
+    except Exception as e:
+        print(e)
+        pass
+    context: dict = {
+        "user": user,
+        "invoice": invoice,
+        "customer": customer,
+        "self_info": self_info,
+        "invoice_items": invoice_items
+    }
+    html_to_string = render_to_string("components/invoice_to_pdf.html", context)
+    pdf = HTML(string=html_to_string).write_pdf()
+    response = HttpResponse(pdf, content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="invoice-{invoice.invoice_number}.pdf"'
     return response
