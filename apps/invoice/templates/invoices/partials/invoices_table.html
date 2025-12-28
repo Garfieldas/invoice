@@ -2,8 +2,8 @@
   <table class="table">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Invoice</th>
+        <th>Invoice number</th>
+        <th>Customer</th>
         <th>Price</th>
         <th>Created</th>
         <th>Details</th>
@@ -12,7 +12,7 @@
     <tbody>
       {% for invoice in invoices %}
       <tr class="hover">
-        <td class="font-semibold">{{ forloop.counter }}</td>
+        <td class="font-mono">{{ invoice.invoice_number }}</td>
         <td class="font-mono">{{ invoice.customer }}</td>
         <td class="font-mono">{{ invoice.total_price }}</td>
         <td class="font-mono">{{ invoice.created_at|date:"Y-m-d" }}</td>

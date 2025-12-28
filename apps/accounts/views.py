@@ -26,7 +26,7 @@ def dashboard(request:HttpRequest)->HttpResponse:
         "user": user,
         "total_price": invoices_total["total_price"],
         "invoices_count": invoices_total["count"],
-        "recent_invoices": recent_invoices
+        "invoices": recent_invoices
     }
 
     return render(request, 'dashboard/dashboard.html', context)
