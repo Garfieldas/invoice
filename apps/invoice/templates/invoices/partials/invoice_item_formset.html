@@ -4,6 +4,9 @@
         {{ item_form.DELETE }}
         <span class="label-text text-error font-semibold">Remove</span>
     </label>
+    {% for hidden in item_form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
 </div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">

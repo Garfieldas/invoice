@@ -51,5 +51,5 @@ def self_info(request:HttpRequest)->HttpResponse:
     else:
         form: SelfInfoForm = SelfInfoForm(instance=self_info)
     context["form"] = form
-    return render(request, 'components/base_form.html', context)
+    return render(request, 'components/base_details_page.html', context)
 

@@ -33,14 +33,15 @@ def create_invoice(request: HttpRequest) -> HttpResponse:
             invoice = form.save()
             formset.instance = invoice
             formset.save()
-            return redirect("invoices")
+            messages.success(request, "Invoice created successfully")
+            return redirect("invoice-details", invoice_pk=invoice.pk)
     else:
         form = InvoiceForm(user=user)
         formset = InvoiceItemFormset()
     
     context["form"] = form
     context["formset"] = formset
-    return render(request, "invoices/invoice_form.html", context)
+    return render(request, "invoices/invoice_details.html", context)
 
 @login_required
 def invoice_details(request:HttpRequest, invoice_pk: str)->HttpResponse:
@@ -63,12 +64,15 @@ def invoice_details(request:HttpRequest, invoice_pk: str)->HttpResponse:
             form.save()
             formset.save()
             messages.success(request, "Invoice details updated successfully")
+            return redirect('invoice-details', invoice_pk=invoice.pk)
+        else:
+            messages.error(request, 'At least one invoice item is required')
     else:
         form = InvoiceForm(instance=invoice, user=user)
         formset = InvoiceItemFormset(instance=invoice)
     context["form"] = form
     context["formset"] = formset
-    return render(request, "invoices/invoice_form.html", context)
+    return render(request, "invoices/invoice_details.html", context)
 
 @login_required
 def delete_invoice(request:HttpRequest, invoice_pk:str)->HttpResponse:
