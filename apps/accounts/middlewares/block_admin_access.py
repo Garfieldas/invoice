@@ -15,7 +15,7 @@ class BlockAdminAccessMiddleware:
         if not request.user.is_authenticated:
             return redirect("login")
         
-        if is_regular_user:
+        if is_regular_user(request):
             return redirect("dashboard")
         
         return self.get_response(request)
