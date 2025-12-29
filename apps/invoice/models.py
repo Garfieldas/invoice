@@ -11,7 +11,7 @@ class Invoice(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
     invoice_number = models.PositiveIntegerField(blank=True, null=True)
     due_date = models.DateField(blank=True, null=True, help_text="Date until customer should pay")
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def generate_invoice_number(self):
         """
@@ -38,14 +38,11 @@ class Invoice(models.Model):
         """
         if self.due_date:
             return
-        
-        if not self.created_at:
-            today = timezone.now().date()
-            self.created_at = today
-        self.due_date = self.created_at + timedelta(days=15)
+        today = timezone.now().date()
+        self.due_date = today + timedelta(days=15)
 
-    def save(self, *args, update=False, **kwargs):
-        if not update:
+    def save(self, *args, **kwargs):
+        if self.pk is None:
             self.generate_pay_until_date()
             self.generate_invoice_number()
         super().save(*args, **kwargs)

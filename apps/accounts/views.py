@@ -60,6 +60,8 @@ def self_info(request:HttpRequest)->HttpResponse:
     return render(request, 'components/base_details_page.html', context)
 
 def login_view(request:HttpRequest):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
     form: LoginForm = LoginForm(request.POST or None)
     context: dict = {}
     if request.method == "POST":
@@ -80,6 +82,8 @@ def logout_view(request:HttpRequest)->HttpResponse:
 
 
 def register_view(request:HttpRequest):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
     form = CreateUserForm(request.POST or None)
     context: dict = {}
     if request.method == "POST" and form.is_valid():

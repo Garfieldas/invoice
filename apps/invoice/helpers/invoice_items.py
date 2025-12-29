@@ -18,6 +18,8 @@ def get_invoice_items(invoice: Invoice, exclude:Optional[InvoiceItem]=None)->Opt
 def override_invoice_price(invoice_items:Optional[QuerySet])->bool:
     """
     Determine if invoice previosly had any invoice items
+    param invoice_items: QuerySet of invoice items
+    return: True if no invoice items exist, False otherwise
     """
     if not invoice_items:
         return True
@@ -26,12 +28,16 @@ def override_invoice_price(invoice_items:Optional[QuerySet])->bool:
 def calculate_invoice_item_price(invoice_item:InvoiceItem)->Decimal:
     """
     Calculate invoice item total price based on amout and single unit price
+    param invoice_item: InvoiceItem instance
+    return: Total price as Decimal
     """
     return invoice_item.amount * invoice_item.price
 
 def sum_invoice_items_price(invoice_items:Optional[QuerySet])->Optional[Decimal]:
     """
     Sum price of all invoice items
+    param invoice_items: QuerySet of invoice items
+    return: Total price as Decimal or None if no items exist
     """
     if not invoice_items:
         return None
