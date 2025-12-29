@@ -1,5 +1,5 @@
 from django.http import HttpRequest
-def check_status(request:HttpRequest)->bool:
+def is_regular_user(request:HttpRequest)->bool:
     if request.user.is_superuser:
         return False
-    return False
+    return True
