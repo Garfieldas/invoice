@@ -1,11 +1,11 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.conf import settings
 from accounts.models import User
-from emailing.helpers.base_classes import EmailMessage
 from emailing.helpers.gmail import send_welcome_email
 
 @receiver(post_save, sender=User)
-def recalculate_invoice_total_price(sender, instance:User, created, **kwargs)->None:
+def send_registration_email(sender, instance:User, created, **kwargs)->None:
     """
     Signal to send a welcome email to a newly registered user.
     params:
@@ -18,7 +18,10 @@ def recalculate_invoice_total_price(sender, instance:User, created, **kwargs)->N
     try:
         if created:
             to_email: str = instance.email
-            send_welcome_email(to_email)
+            if settings.ASYNC:
+                send_welcome_email.delay(to_email)
+            else:
+                send_welcome_email(to_email)
         else:
             return None
     except Exception as e:

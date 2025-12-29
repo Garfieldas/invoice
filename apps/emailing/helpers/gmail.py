@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.urls import reverse
 from django.conf import settings
+from django_rq import job
 from emailing.helpers.base_classes import EmailMessage
 
 def send_email(email_message:EmailMessage):
@@ -32,6 +33,7 @@ def send_email(email_message:EmailMessage):
     except Exception as e:
         print(f"Failed to send email to {email_message.to_email}, error: {e}")
 
+@job('default')
 def send_welcome_email(to_email:str):
     """
     Sends a welcome email to a new user.

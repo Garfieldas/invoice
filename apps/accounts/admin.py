@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import messages
 from django.db.models.query import QuerySet
+from django.conf import settings
 from django.http.request import HttpRequest
 from accounts.models import User, SelfInfo
 from emailing.helpers.gmail import send_welcome_email
@@ -28,7 +29,10 @@ class BaseUserAdmin(UserAdmin):
 
     def send_welcome_email(self, request: HttpRequest, queryset: QuerySet) -> None:
         for user in queryset:
-            send_welcome_email(user.email)
+            if settings.ASYNC:
+                send_welcome_email.delay(user.email)
+            else:
+                send_welcome_email(user.email)
         self.message_user(request, "Welcome emails have been sent.", messages.SUCCESS)
     send_welcome_email.short_description = "Send welcome email to selected users"
 
