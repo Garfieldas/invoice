@@ -13,6 +13,7 @@ from invoice.helpers.invoices import(
 from accounts.models import User, SelfInfo
 from accounts.forms.self_info_form import SelfInfoForm
 from accounts.forms.auth_forms import LoginForm, CreateUserForm
+from accounts.helpers.decorators import is_authenticated
 
 @login_required
 def dashboard(request:HttpRequest)->HttpResponse:
@@ -59,9 +60,8 @@ def self_info(request:HttpRequest)->HttpResponse:
     context["form"] = form
     return render(request, 'components/base_details_page.html', context)
 
+@is_authenticated
 def login_view(request:HttpRequest):
-    if request.user.is_authenticated:
-        return redirect("dashboard")
     form: LoginForm = LoginForm(request.POST or None)
     context: dict = {}
     if request.method == "POST":
@@ -80,10 +80,8 @@ def logout_view(request:HttpRequest)->HttpResponse:
     logout(request)
     return redirect("login")
 
-
+@is_authenticated
 def register_view(request:HttpRequest):
-    if request.user.is_authenticated:
-        return redirect("dashboard")
     form = CreateUserForm(request.POST or None)
     context: dict = {}
     if request.method == "POST" and form.is_valid():
