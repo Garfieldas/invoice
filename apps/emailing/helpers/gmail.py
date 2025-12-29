@@ -1,15 +1,50 @@
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.urls import reverse
 from django.conf import settings
 from emailing.helpers.base_classes import EmailMessage
 
 def send_email(email_message:EmailMessage):
+    """
+    Sends an email using Django's send_mail function.
+    params: email_message: An instance of EmailMessage containing email details.
+    returns: None"""
     try:
+        context: dict = {
+            "title": email_message.title,
+            "body": email_message.body,
+            "cta_name": email_message.cta_name,
+            "cta_url": email_message.cta_url,
+            "extra_body": email_message.extra_body,
+        }
+        email_html_message: str = render_to_string(email_message.base_template, context)
+        plain_message: str = strip_tags(email_html_message)
+
         send_mail(
             email_message.subject,
-            email_message.message,
+            plain_message,
             settings.DEFAULT_FROM_EMAIL,
             [email_message.to_email],
             fail_silently=False,
+            html_message=email_html_message
         )
     except Exception as e:
         print(f"Failed to send email to {email_message.to_email}, error: {e}")
+
+def send_welcome_email(to_email:str):
+    """
+    Sends a welcome email to a new user.
+    params: to_email: The recipient's email address.
+    returns: None
+    """
+    email_message: EmailMessage = EmailMessage(
+        subject="Welcome to Our Service",
+        to_email=to_email,
+        title="InvoiceGo",
+        body="Thank for registering in our service. We're excited to have you on board.",
+        cta_name="Get Started",
+        cta_url=f"{settings.BASE_URL}{reverse('login')}",
+        extra_body="If you have any questions, feel free to reach out to our support team."
+    )
+    send_email(email_message)
