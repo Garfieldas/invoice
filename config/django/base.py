@@ -29,6 +29,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middlewares.check_user_self_info.UserInfoMiddleware',
+    'accounts.middlewares.block_admin_access.BlockAdminAccessMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -90,3 +92,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "accounts.User"
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "login"

@@ -31,12 +31,17 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
 
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+    
+    @property
+    def has_self_info(self):
+        return hasattr(self, "self_info")
 
     objects = UserManager()
 

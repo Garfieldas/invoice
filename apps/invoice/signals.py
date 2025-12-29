@@ -24,14 +24,13 @@ def recalculate_invoice_total_price(sender, instance:InvoiceItem, created, **kwa
         invoice_items:Optional[QuerySet] = get_invoice_items(invoice)
         if created:
             if invoice_items:
-                recalculate_price:bool = override_invoice_price(invoice_items)
-                if recalculate_price:
+                if override_invoice_price(invoice_items):
                     invoice.total_price = calculate_invoice_item_price(instance)
                 else:
                     invoice.total_price += calculate_invoice_item_price(instance)
         else:
             invoice.total_price = sum_invoice_items_price(invoice_items)
-        invoice.save(update=True)
+        invoice.save(update_fields=["total_price"])
         
     except Invoice.DoesNotExist:
         print('Failed to get invoice!')
@@ -48,7 +47,7 @@ def recalculate_invoice_total_price_on_item_delete(sender, instance:InvoiceItem,
             invoice.total_price = sum_invoice_items_price(invoice_items)
         else:
             invoice.total_price = Decimal("0.00")
-        invoice.save(update=True)
+        invoice.save(update_fields=["total_price"])
 
     except Invoice.DoesNotExist:
         print('Failed to get invoice!')
