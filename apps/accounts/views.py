@@ -1,18 +1,21 @@
 from typing import Optional
+from django.http.response import HttpResponseBase
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
 from django.db.models import QuerySet
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
 from invoice.helpers.invoices import(
     get_user_invoices,
     calculate_total_sum_and_count_of_invoices
 )
 from accounts.models import User, SelfInfo
 from accounts.forms.self_info_form import SelfInfoForm
-from accounts.forms.auth_forms import LoginForm, CreateUserForm
+from accounts.forms.auth_forms import LoginForm, CreateUserForm, ResetPasswordForm
 from accounts.helpers.decorators import is_authenticated
 
 @login_required
@@ -90,3 +93,12 @@ def register_view(request:HttpRequest):
         return redirect("login")
     context["form"] = form
     return render(request, "accounts/register_page.html", context)
+
+@method_decorator(is_authenticated, name='dispatch')
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    form_class = ResetPasswordForm
+    template_name = "accounts/password_reset.html"
+
+@method_decorator(is_authenticated, name='dispatch')
+class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = "accounts/password_reset_done.html"
