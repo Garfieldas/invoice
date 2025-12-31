@@ -1,5 +1,4 @@
 from typing import Optional
-from django.http.response import HttpResponseBase
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
@@ -15,7 +14,7 @@ from invoice.helpers.invoices import(
 )
 from accounts.models import User, SelfInfo
 from accounts.forms.self_info_form import SelfInfoForm
-from accounts.forms.auth_forms import LoginForm, CreateUserForm, ResetPasswordForm
+from accounts.forms.auth_forms import LoginForm, CreateUserForm, ResetPasswordForm, CustomSetPasswordForm
 from accounts.helpers.decorators import is_authenticated
 
 @login_required
@@ -102,3 +101,12 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
 @method_decorator(is_authenticated, name='dispatch')
 class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
     template_name = "accounts/password_reset_done.html"
+
+@method_decorator(is_authenticated, name='dispatch')
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = "accounts/password_reset_confirm.html"
+    form_class = CustomSetPasswordForm
+    
+@method_decorator(is_authenticated, name='dispatch')
+class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = "accounts/password_reset_complete.html"

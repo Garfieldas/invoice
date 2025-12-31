@@ -50,3 +50,22 @@ def send_welcome_email(to_email:str):
         extra_body="If you have any questions, feel free to reach out to our support team."
     )
     send_email(email_message)
+
+@job('default')
+def send_password_reset_email(to_email:str, password_reset_link:str):
+    """
+    Sends a password reset email to a user.
+    params: to_email: The recipient's email address.
+            reset_link: The link to reset the password.
+    returns: None
+    """
+    email_message: EmailMessage = EmailMessage(
+        subject="Password Reset Request",
+        to_email=to_email,
+        title="Password Reset",
+        body="We received a request to reset your password.",
+        cta_name="Reset Password",
+        cta_url=password_reset_link,
+        extra_body="If you did not request a password reset, please ignore this email."
+    )
+    send_email(email_message)
