@@ -9,11 +9,13 @@ from accounts.views import (
     CustomPasswordResetDoneView,
     CustomPasswordResetConfirmView,
     CustomPasswordResetCompleteView,
+    UpdateUserView,
 )
 
 urlpatterns = [
     path('', dashboard, name='dashboard'),
     path('settings/', self_info, name='settings'),
+    path('update-profile/', UpdateUserView.as_view(), name='update_profile'),
 
     path('register/', register_view, name='register'),
     path('login/', login_view, name='login'),

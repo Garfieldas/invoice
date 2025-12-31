@@ -8,13 +8,14 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
+from django.views.generic.edit import FormView
 from invoice.helpers.invoices import(
     get_user_invoices,
     calculate_total_sum_and_count_of_invoices
 )
 from accounts.models import User, SelfInfo
 from accounts.forms.self_info_form import SelfInfoForm
-from accounts.forms.auth_forms import LoginForm, CreateUserForm, ResetPasswordForm, CustomSetPasswordForm
+from accounts.forms.auth_forms import LoginForm, CreateUserForm, ResetPasswordForm, CustomSetPasswordForm, UpdateUserForm
 from accounts.helpers.decorators import is_authenticated
 
 @login_required
@@ -92,6 +93,31 @@ def register_view(request:HttpRequest):
         return redirect("login")
     context["form"] = form
     return render(request, "accounts/register_page.html", context)
+
+class UpdateUserView(FormView):
+    form_class = UpdateUserForm
+    template_name = "components/base_details_page.html"
+    success_url = "."
+    
+    context = {
+        "title": "Update Profile",
+        "description": "Update your account profile information",
+            }
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateUserView, self).get_context_data(**kwargs)
+        context.update(UpdateUserView.context)
+        return context
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({"instance": self.request.user})
+        return kwargs
+    
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Profile updated successfully")
+        return super().form_valid(form)
 
 @method_decorator(is_authenticated, name='dispatch')
 class CustomPasswordResetView(auth_views.PasswordResetView):

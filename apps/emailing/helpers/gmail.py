@@ -4,6 +4,8 @@ from django.utils.html import strip_tags
 from django.urls import reverse
 from django.conf import settings
 from django_rq import job
+from accounts.models import User
+from accounts.helpers.utils import create_password_reset_link
 from emailing.helpers.base_classes import EmailMessage
 
 def send_email(email_message:EmailMessage):
@@ -52,13 +54,17 @@ def send_welcome_email(to_email:str):
     send_email(email_message)
 
 @job('default')
-def send_password_reset_email(to_email:str, password_reset_link:str):
+def send_password_reset_email(to_email:str):
     """
     Sends a password reset email to a user.
     params: to_email: The recipient's email address.
-            reset_link: The link to reset the password.
-    returns: None
-    """
+    returns: None"""
+    try:
+        user: User = User.objects.get(email=to_email)
+    except Exception as e:
+        print(f"Failed to get user with email {to_email}")
+    
+    password_reset_link:str = create_password_reset_link(user)
     email_message: EmailMessage = EmailMessage(
         subject="Password Reset Request",
         to_email=to_email,
