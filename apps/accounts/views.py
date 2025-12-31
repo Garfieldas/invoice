@@ -94,6 +94,7 @@ def register_view(request:HttpRequest):
     context["form"] = form
     return render(request, "accounts/register_page.html", context)
 
+@method_decorator(login_required, name='dispatch')
 class UpdateUserView(FormView):
     form_class = UpdateUserForm
     template_name = "components/base_details_page.html"
