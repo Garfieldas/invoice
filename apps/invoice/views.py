@@ -1,4 +1,5 @@
 from typing import Optional
+from weasyprint import HTML
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
@@ -6,13 +7,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.db.models import QuerySet
-from invoice.helpers.invoices import get_user_invoices
-from invoice.models import Invoice, InvoiceItem
 from accounts.models import User, SelfInfo
+from invoice.helpers.invoices import get_user_invoices, get_invoice_items, amount_to_words_lt
+from invoice.models import Invoice
 from invoice.forms import InvoiceForm, InvoiceItemFormset
-from invoice.helpers.invoice_items import get_invoice_items
-from invoice.helpers.invoices import amount_to_words_lt
-from weasyprint import HTML
 
 @login_required
 def invoices(request: HttpRequest)->HttpResponse:
@@ -57,9 +55,9 @@ def invoice_details(request:HttpRequest, invoice_pk: str)->HttpResponse:
         "delete_url": reverse('invoice_delete', args=[invoice.pk])
     }
     user = request.user
+    form = InvoiceForm(request.POST or None, instance=invoice, user=user)
+    formset = InvoiceItemFormset(request.POST or None, instance=invoice)
     if request.method == "POST":
-        form = InvoiceForm(request.POST or None, instance=invoice, user=user)
-        formset = InvoiceItemFormset(request.POST or None, instance=invoice)
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
