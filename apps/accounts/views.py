@@ -1,6 +1,6 @@
 from typing import Optional
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.http import HttpRequest, HttpResponse
 from django.db.models import QuerySet
 from django.contrib import messages
@@ -47,12 +47,9 @@ def self_info(request:HttpRequest)->HttpResponse:
     context: dict = {
         "title": "Profile settings",
         "description": "Additional information for invoice generation",
-        "url": reverse("dashboard")
+        "url": reverse_lazy("dashboard")
     }
-    if not self_info:
-        form: SelfInfoForm = SelfInfoForm(request.POST or None)
-    else:
-        form: SelfInfoForm = SelfInfoForm(request.POST or None, instance=self_info)
+    form: SelfInfoForm = SelfInfoForm(request.POST or None, instance=self_info or None)
     if request.method == "POST":
         if form.is_valid():
             instance = form.save(commit=False)
@@ -103,6 +100,7 @@ class UpdateUserView(FormView):
     context = {
         "title": "Update Profile",
         "description": "Update your account profile information",
+        "url": reverse_lazy("dashboard")
             }
 
     def get_context_data(self, **kwargs):

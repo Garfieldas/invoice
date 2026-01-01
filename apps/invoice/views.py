@@ -31,18 +31,14 @@ def create_invoice(request: HttpRequest) -> HttpResponse:
         "url": reverse("invoices")
     }
     if request.method == "POST":
-        form = InvoiceForm(request.POST, user=user)
-        formset = InvoiceItemFormset(request.POST)
+        form = InvoiceForm(request.POST or None, user=user)
+        formset = InvoiceItemFormset(request.POST or None)
         if form.is_valid() and formset.is_valid():
             invoice = form.save()
             formset.instance = invoice
             formset.save()
             messages.success(request, "Invoice created successfully")
             return redirect("invoice-details", invoice_pk=invoice.pk)
-    else:
-        form = InvoiceForm(user=user)
-        formset = InvoiceItemFormset()
-    
     context["form"] = form
     context["formset"] = formset
     return render(request, "invoices/invoice_details.html", context)
@@ -62,8 +58,8 @@ def invoice_details(request:HttpRequest, invoice_pk: str)->HttpResponse:
     }
     user = request.user
     if request.method == "POST":
-        form = InvoiceForm(request.POST, instance=invoice, user=user)
-        formset = InvoiceItemFormset(request.POST, instance=invoice)
+        form = InvoiceForm(request.POST or None, instance=invoice, user=user)
+        formset = InvoiceItemFormset(request.POST or None, instance=invoice)
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
@@ -71,9 +67,6 @@ def invoice_details(request:HttpRequest, invoice_pk: str)->HttpResponse:
             return redirect('invoice-details', invoice_pk=invoice.pk)
         else:
             messages.error(request, 'At least one invoice item is required')
-    else:
-        form = InvoiceForm(instance=invoice, user=user)
-        formset = InvoiceItemFormset(instance=invoice)
     context["form"] = form
     context["formset"] = formset
     return render(request, "invoices/invoice_details.html", context)
@@ -88,26 +81,6 @@ def delete_invoice(request:HttpRequest, invoice_pk:str)->HttpResponse:
     response:HttpResponse = HttpResponse("", status=200)
     response["HX-Redirect"] = reverse('invoices')
     return response
-
-@login_required
-def pdf_template(request:HttpRequest, invoice_pk:str):
-    try:
-        user: User = request.user # type: ignore
-        invoice:Invoice = Invoice.objects.select_related('customer').get(pk=invoice_pk)
-        invoice_items:Optional[QuerySet] = get_invoice_items(invoice)
-        self_info:SelfInfo = SelfInfo.objects.get(user=user)
-        customer = invoice.customer
-    except Exception as e:
-        print(e)
-        pass
-    context: dict = {
-        "user": user,
-        "invoice": invoice,
-        "customer": customer,
-        "self_info": self_info,
-        "invoice_items": invoice_items
-    }
-    return render(request, "components/invoice_to_pdf.html", context)
 
 @login_required
 def create_invoice_pdf(request:HttpRequest, invoice_pk:str):

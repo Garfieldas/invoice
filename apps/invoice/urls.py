@@ -12,9 +12,3 @@ urlpatterns = [
     path('delete/<int:invoice_pk>', delete_invoice, name='invoice_delete'),
     path('pdf/<int:invoice_pk>', create_invoice_pdf, name='invoice_pdf'),
 ]
-if settings.DEBUG:
-    try:
-        from invoice.views import pdf_template
-        urlpatterns += path('html/<int:invoice_pk>', pdf_template, name='invoice_html'),
-    except Exception:
-        pass
