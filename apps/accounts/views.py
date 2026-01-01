@@ -71,7 +71,10 @@ def login_view(request:HttpRequest):
 
         if user is not None:
             login(request, user)
+            messages.success(request, "Logged in successfully")
             return redirect("settings")
+        else:
+            messages.error(request, "Invalid email or password")
     context["form"] = form
     return render(request, "accounts/login_page.html", context)
 
@@ -111,10 +114,16 @@ class UpdateUserView(FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({"instance": self.request.user})
+        self.original_email:str = getattr(self.request.user, "email", "")
         return kwargs
     
     def form_valid(self, form):
+        new_email:str = form.cleaned_data.get("email")
         form.save()
+        if self.original_email != new_email:
+            logout(self.request)
+            messages.info(self.request, "Email changed, please log in again.")
+            return redirect("login")
         messages.success(self.request, "Profile updated successfully")
         return super().form_valid(form)
 

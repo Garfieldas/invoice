@@ -28,9 +28,9 @@ def create_invoice(request: HttpRequest) -> HttpResponse:
         "description": "All fields are required!",
         "url": reverse("invoices")
     }
+    form = InvoiceForm(request.POST or None, user=user)
+    formset = InvoiceItemFormset(request.POST or None)
     if request.method == "POST":
-        form = InvoiceForm(request.POST or None, user=user)
-        formset = InvoiceItemFormset(request.POST or None)
         if form.is_valid() and formset.is_valid():
             invoice = form.save()
             formset.instance = invoice
