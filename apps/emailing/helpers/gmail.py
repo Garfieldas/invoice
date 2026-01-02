@@ -1,4 +1,4 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage as ReportMessage
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.urls import reverse
@@ -75,3 +75,16 @@ def send_password_reset_email(to_email:str):
         extra_body="If you did not request a password reset, please ignore this email."
     )
     send_email(email_message)
+
+@job('default')
+def send_invoice_pdf(pdf):
+    email_message: EmailMessage = EmailMessage(
+        subject="Password Reset Request",
+        to_email=settings.EMAIL_HOST_USER,
+        title="Invoice",
+        body="invoic shit",
+        cta_name="check pdf",
+        cta_url=settings.BASE_URL,
+        extra_body="If you did not request a password reset, please ignore this email."
+    )
+    pass

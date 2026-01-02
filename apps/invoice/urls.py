@@ -12,3 +12,9 @@ urlpatterns = [
     path('delete/<int:invoice_pk>', delete_invoice, name='invoice_delete'),
     path('pdf/<int:invoice_pk>', create_invoice_pdf, name='invoice_pdf'),
 ]
+
+if settings.DEBUG:
+    from invoice.views import debug_invoice
+    urlpatterns += [ 
+        path('debug/invoice', debug_invoice, name='invoice_debug') 
+    ]

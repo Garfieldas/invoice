@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.db.models import QuerySet
 from accounts.models import User, SelfInfo
 from invoice.helpers.invoices import get_user_invoices, get_invoice_items, amount_to_words_lt
+from invoice.helpers.pdf import generate_invoice_pdf
 from invoice.models import Invoice
 from invoice.forms import InvoiceForm, InvoiceItemFormset
 
@@ -105,3 +106,9 @@ def create_invoice_pdf(request:HttpRequest, invoice_pk:str):
     response = HttpResponse(pdf, content_type="application/pdf")
     response["Content-Disposition"] = f'inline; filename="invoice-{invoice.invoice_number}.pdf"'
     return response
+
+
+def debug_invoice(request: HttpRequest)->HttpResponse:
+    invoice_pk = 2
+    pdf = generate_invoice_pdf(2)
+    return HttpResponse('Test')
