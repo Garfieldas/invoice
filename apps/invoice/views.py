@@ -4,14 +4,15 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.db.models import QuerySet
 from accounts.models import User, SelfInfo
 from invoice.helpers.invoices import get_user_invoices, get_invoice_items, amount_to_words_lt
-from invoice.helpers.pdf import generate_invoice_pdf
 from invoice.models import Invoice
 from invoice.forms import InvoiceForm, InvoiceItemFormset
+from emailing.helpers.gmail import send_invoice_pdf
 
 @login_required
 def invoices(request: HttpRequest)->HttpResponse:
@@ -109,6 +110,9 @@ def create_invoice_pdf(request:HttpRequest, invoice_pk:str):
 
 
 def debug_invoice(request: HttpRequest)->HttpResponse:
-    invoice_pk = 2
-    pdf = generate_invoice_pdf(2)
+    invoice_pk = '2'
+    if settings.ASYNC:
+        send_invoice_pdf.delay(invoice_pk, to_email='dainiusrainys99@gmail.com')
+    else:
+        send_invoice_pdf(invoice_pk, to_email='dainiusrainys99@gmail.com')
     return HttpResponse('Test')

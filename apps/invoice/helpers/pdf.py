@@ -3,7 +3,6 @@ from weasyprint import HTML
 from django.db.models import QuerySet
 from django.template.loader import render_to_string
 from invoice.models import Invoice
-from django_rq import job
 from customers.models import Customer
 from invoice.helpers.invoices import (
     get_invoice_items,
@@ -11,8 +10,12 @@ from invoice.helpers.invoices import (
 )
 from accounts.models import User, SelfInfo
 
-@job('low')
-def generate_invoice_pdf(invoice_pk:str):
+def generate_invoice_pdf(invoice_pk:str)->Optional[bytes]:
+    """
+    Generates a PDF for the given invoice.
+    params: invoice_pk: The primary key of the invoice.
+    returns: PDF as bytes or None if error occurs.
+    """
     try:
         invoice: Invoice = Invoice.objects.select_related('customer', 'user').get(pk=invoice_pk)
         user: User = invoice.user
