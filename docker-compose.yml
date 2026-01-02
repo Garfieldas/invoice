@@ -11,7 +11,6 @@ services:
     container_name: django_app
     ports:
       - "8000:8000"
-      - "5678:5678"
     image: app:django
     command: python manage.py runserver 0.0.0.0:8000
     env_file:
