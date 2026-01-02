@@ -1,0 +1,15 @@
+.env
+env
+.vscode
+mypy.ini
+.dmypy.json
+db.sqlite3
+*.sqlite3
+
+**/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.mypy_cache/
+.pytest_cache/
