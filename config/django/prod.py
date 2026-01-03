@@ -1,5 +1,9 @@
 from .base import *
 
+CSRF_TRUSTED_ORIGINS = [
+    os.environ.get("CSRF_TRUSTED_ORIGIN"),
+]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
