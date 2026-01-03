@@ -1,54 +1,50 @@
 from typing import Optional
-from decimal import Decimal
 from django.shortcuts import get_object_or_404
 from django.dispatch import receiver
-from django.db.models import QuerySet
-from django.db.models.signals import post_save, pre_delete
+from django.conf import settings
+from django.db.models.signals import post_save, post_delete
 from invoice.models import InvoiceItem, Invoice
-from invoice.helpers.invoice_items import (
-    get_invoice_items,
-    override_invoice_price,
-    calculate_invoice_item_price,
-    sum_invoice_items_price
-)
+from invoice.helpers.invoices import recalculate_invoice_total_price_task
 
 @receiver(post_save, sender=InvoiceItem)
 def recalculate_invoice_total_price(sender, instance:InvoiceItem, created, **kwargs)->None:
     """
     Simple signal to recalculate invoice total price
-    If new invoice item created runs logic to check if sum should be added or overriden
-    If invoice item updated recalculate total price
+    When invoice item is created or updated
+    param sender: model class
+    param instance: actual instance being saved
+    param created: boolean; True if a new record was created
+    param kwargs: additional keyword arguments
+    return: None
     """
     try:
-        invoice:Optional[Invoice] = get_object_or_404(Invoice, invoice_items=instance)
-        invoice_items:Optional[QuerySet] = get_invoice_items(invoice)
-        if created:
-            if invoice_items:
-                if override_invoice_price(invoice_items):
-                    invoice.total_price = calculate_invoice_item_price(instance)
-                else:
-                    invoice.total_price += calculate_invoice_item_price(instance)
-        else:
-            invoice.total_price = sum_invoice_items_price(invoice_items)
-        invoice.save(update_fields=["total_price"])
-        
+        invoice:Optional[Invoice] = get_object_or_404(Invoice, invoice_items=instance)        
     except Invoice.DoesNotExist:
         print('Failed to get invoice!')
+    if settings.ASYNC:
+        recalculate_invoice_total_price_task.delay(invoice.pk)
+    else:
+        recalculate_invoice_total_price_task(invoice.pk)
+    
 
-@receiver(pre_delete, sender=InvoiceItem)
+@receiver(post_delete, sender=InvoiceItem)
 def recalculate_invoice_total_price_on_item_delete(sender, instance:InvoiceItem,  **kwargs)->None:
     """
-    Simple signal to recalculate invoice total price on item deletion
+    Simple signal to recalculate invoice total price
+    When invoice item is deleted
+    param sender: model class
+    param instance: actual instance being saved
+    param kwargs: additional keyword arguments
+    return: None
     """
+    invoice_pk = instance.invoice.pk
     try:
-        invoice:Optional[Invoice] = get_object_or_404(Invoice, invoice_items=instance)
-        invoice_items:Optional[QuerySet] = get_invoice_items(invoice, exclude=instance)
-        if invoice_items:
-            invoice.total_price = sum_invoice_items_price(invoice_items)
-        else:
-            invoice.total_price = Decimal("0.00")
-        invoice.save(update_fields=["total_price"])
-
+        invoice:Optional[Invoice] = get_object_or_404(Invoice, pk=invoice_pk)
     except Invoice.DoesNotExist:
         print('Failed to get invoice!')
         return None
+    if settings.ASYNC:
+        recalculate_invoice_total_price_task.delay(invoice.pk)
+    else:
+        recalculate_invoice_total_price_task(invoice.pk)
+    

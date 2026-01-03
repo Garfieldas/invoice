@@ -20,6 +20,24 @@ def customers(request:HttpRequest)->HttpResponse:
     return render(request, "customers/customers.html", context)
 
 @login_required
+def create_customer(request:HttpRequest)->HttpResponse:
+    user = request.user
+    context: dict = {
+        "title": "Customer creation",
+        "description": "All fields are required!",
+        "url": reverse("customers")
+    }
+    form = CustomerForm(request.POST or None, user=user)
+    if request.method == "POST":
+        if form.is_valid():
+            customer = form.save()
+            form.save()
+            messages.success(request, 'Customer successfully added!')
+            return redirect('customer_details', customer_pk=customer.pk)
+    context["form"] = form
+    return render(request, 'components/base_details_page.html', context)
+
+@login_required
 def customer_details(request:HttpRequest, customer_pk:str)->HttpResponse:
     try:
         customer = get_object_or_404(Customer, pk=customer_pk)
@@ -32,14 +50,11 @@ def customer_details(request:HttpRequest, customer_pk:str)->HttpResponse:
         "update": True,
         "delete_url": reverse('customer_delete', args=[customer.pk])
     }
+    form: CustomerForm = CustomerForm(request.POST or None, instance=customer)
     if request.method == "POST":
-        form: CustomerForm = CustomerForm(request.POST, instance=customer)
         if form.is_valid():
             form.save()
             messages.success(request, "Customer details updated successfully")
-    else:
-        form = CustomerForm(instance=customer)
-
     context["form"] = form
     return render(request, 'components/base_details_page.html', context)
 
@@ -55,23 +70,3 @@ def delete_customer(request:HttpRequest, customer_pk:str)->HttpResponse:
     response:HttpResponse = HttpResponse("", status=200)
     response["HX-Redirect"] = reverse('customers')
     return response
-
-@login_required
-def create_customer(request:HttpRequest)->HttpResponse:
-    user = request.user
-    context: dict = {
-        "title": "Customer creation",
-        "description": "All fields are required!",
-        "url": reverse("customers")
-    }
-    if request.method == "POST":
-        form = CustomerForm(request.POST, user=user)
-        if form.is_valid():
-            customer = form.save()
-            form.save()
-            messages.success(request, 'Customer successfully added!')
-            return redirect('customer_details', customer_pk=customer.pk)
-    else:
-        form = CustomerForm(user=user)
-    context["form"] = form
-    return render(request, 'components/base_details_page.html', context)

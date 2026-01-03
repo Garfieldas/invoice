@@ -1,18 +1,21 @@
 from typing import Optional
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.http import HttpRequest, HttpResponse
 from django.db.models import QuerySet
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
+from django.views.generic.edit import FormView
 from invoice.helpers.invoices import(
     get_user_invoices,
     calculate_total_sum_and_count_of_invoices
 )
 from accounts.models import User, SelfInfo
 from accounts.forms.self_info_form import SelfInfoForm
-from accounts.forms.auth_forms import LoginForm, CreateUserForm
+from accounts.forms.auth_forms import LoginForm, CreateUserForm, ResetPasswordForm, CustomSetPasswordForm, UpdateUserForm
 from accounts.helpers.decorators import is_authenticated
 
 @login_required
@@ -44,12 +47,9 @@ def self_info(request:HttpRequest)->HttpResponse:
     context: dict = {
         "title": "Profile settings",
         "description": "Additional information for invoice generation",
-        "url": reverse("dashboard")
+        "url": reverse_lazy("dashboard")
     }
-    if not self_info:
-        form: SelfInfoForm = SelfInfoForm(request.POST or None)
-    else:
-        form: SelfInfoForm = SelfInfoForm(request.POST or None, instance=self_info)
+    form: SelfInfoForm = SelfInfoForm(request.POST or None, instance=self_info or None)
     if request.method == "POST":
         if form.is_valid():
             instance = form.save(commit=False)
@@ -71,7 +71,10 @@ def login_view(request:HttpRequest):
 
         if user is not None:
             login(request, user)
+            messages.success(request, "Logged in successfully")
             return redirect("settings")
+        else:
+            messages.error(request, "Invalid email or password")
     context["form"] = form
     return render(request, "accounts/login_page.html", context)
 
@@ -90,3 +93,54 @@ def register_view(request:HttpRequest):
         return redirect("login")
     context["form"] = form
     return render(request, "accounts/register_page.html", context)
+
+@method_decorator(login_required, name='dispatch')
+class UpdateUserView(FormView):
+    form_class = UpdateUserForm
+    template_name = "components/base_details_page.html"
+    success_url = "."
+    
+    context = {
+        "title": "Update Profile",
+        "description": "Update your account profile information",
+        "url": reverse_lazy("dashboard")
+            }
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateUserView, self).get_context_data(**kwargs)
+        context.update(UpdateUserView.context)
+        return context
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({"instance": self.request.user})
+        self.original_email:str = getattr(self.request.user, "email", "")
+        return kwargs
+    
+    def form_valid(self, form):
+        new_email:str = form.cleaned_data.get("email")
+        form.save()
+        if self.original_email != new_email:
+            logout(self.request)
+            messages.info(self.request, "Email changed, please log in again.")
+            return redirect("login")
+        messages.success(self.request, "Profile updated successfully")
+        return super().form_valid(form)
+
+@method_decorator(is_authenticated, name='dispatch')
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    form_class = ResetPasswordForm
+    template_name = "accounts/password_reset.html"
+
+@method_decorator(is_authenticated, name='dispatch')
+class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = "accounts/password_reset_done.html"
+
+@method_decorator(is_authenticated, name='dispatch')
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = "accounts/password_reset_confirm.html"
+    form_class = CustomSetPasswordForm
+    
+@method_decorator(is_authenticated, name='dispatch')
+class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = "accounts/password_reset_complete.html"

@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('customers/', include('customers.urls')),
     path('invoices/', include('invoice.urls')),
+    path('django-rq/', include('django_rq.urls')),
 ]
 
 if settings.DEBUG:

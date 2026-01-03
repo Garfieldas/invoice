@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+  @media screen and (max-width: 600px) {
+    .content {
+        width: 100% !important;
+        display: block !important;
+        padding: 10px !important;
+    }
+    .header, .body, .footer {
+        padding: 20px !important;
+    }
+  }
+
+  .header { background-color: #1E73BE !important; color: #ffffff !important; }
+  .content-border { border: 1px solid #EAF4FF !important; }
+  .footer { background-color: #155B9A !important; color: #ffffff !important; }
+
+  a.cta {
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+    display: inline-block !important;
+    padding: 10px 20px !important;
+    border-radius: 5px !important;
+    background-color: #1E73BE !important;
+  }
+  a.cta:hover { background-color: #155B9A !important; color: #ffffff !important; }
+
+</style>
+</head>
+<body style="font-family: 'Poppins', Arial, sans-serif">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table class="content content-border" width="600" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: 1px solid #EAF4FF;">
+                    <tr>
+                        <td class="header" style="background-color: #1E73BE; padding: 40px; text-align: center; color: white; font-size: 24px;">
+                        {{ title }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="body" style="padding: 40px; text-align: left; font-size: 16px; line-height: 1.6;">
+                            {{ body }}        
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0px 40px 0px 40px; text-align: center;">
+                            <table cellspacing="0" cellpadding="0" style="margin: auto;">
+                                <tr>
+                                    <td align="center" style="padding: 0;">
+                                        <a class="cta" href="{{ cta_url }}" target="_blank" style="color: #ffffff; text-decoration: none; font-weight: bold; display: inline-block; padding: 10px 20px; border-radius: 5px; background-color: #1E73BE;">{{ cta_name }}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="body" style="padding: 40px; text-align: left; font-size: 16px; line-height: 1.6;">
+                            {{ extra_body }}             
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="footer" style="background-color: #155B9A; padding: 40px; text-align: center; color: white; font-size: 14px;">
+                        Copyright &copy; | InvoiceGo
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
