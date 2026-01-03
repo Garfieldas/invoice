@@ -17,3 +17,13 @@ DATABASES = {
         },
     }
 }
+
+RQ_QUEUES = {
+    "default": {
+        "HOST": env("REDISHOST"),
+        "PORT": env.int("REDISPORT"),
+        "DB": env.int("REDISDB"),
+        "PASSWORD": env("REDISPASSWORD"),
+        "DEFAULT_TIMEOUT": env.int("RQ_DEFAULT_TIMEOUT"),
+    },
+}

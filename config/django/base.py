@@ -97,19 +97,4 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 BASE_URL = env('BASE_URL')
 
-RQ_QUEUES = {
-    'default': {
-        'HOST': env('RQ_DEFAULT_HOST'),
-        'PORT': env.int('RQ_DEFAULT_PORT'),
-        'DB': env.int('RQ_DEFAULT_DB'),
-        'DEFAULT_TIMEOUT': env.int('RQ_DEFAULT_TIMEOUT'),
-    },
-    'low': {
-        'HOST': env('RQ_LOW_HOST'),
-        'PORT': env.int('RQ_LOW_PORT'),
-        'DB': env.int('RQ_LOW_DB'),
-        'DEFAULT_TIMEOUT': env.int('RQ_LOW_TIMEOUT'),
-    },
-}
-
 ASYNC = env.bool('ASYNC')
