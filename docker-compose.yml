@@ -1,22 +1,19 @@
-version: "3.8"
 services:
   redis:
     image: redis:6-alpine
     container_name: redis
-
-  web:
-    build: .
-    volumes:
-      - .:/app
-    container_name: django_app
     ports:
-      - "8000:8000"
-    image: app:django
-    command: python manage.py runserver 0.0.0.0:8000
+      - "${RQ_DEFAULT_PORT}:6379"
+
+  db:
+    image: postgres:14-alpine
+    container_name: postgres
     env_file:
       - .env
-    depends_on:
-      - redis
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   rq_worker:
     build: .
@@ -26,4 +23,13 @@ services:
     command: python manage.py rqworker --with-scheduler
     depends_on:
       - redis
-      - web
+      - db
+    env_file:
+      - .env
+    environment:
+      - RQ_DEFAULT_HOST=redis
+      - RQ_DEFAULT_PORT=6379
+
+volumes:
+  pgdata:
+    driver: local
