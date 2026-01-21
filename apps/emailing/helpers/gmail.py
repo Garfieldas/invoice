@@ -1,5 +1,5 @@
 from typing import Optional
-from django.core.mail import send_mail, EmailMessage as ReportMessage
+from django.core.mail import send_mail, EmailMessage as ReportMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.urls import reverse
@@ -8,7 +8,7 @@ from django_rq import job
 from accounts.models import User
 from accounts.helpers.utils import create_password_reset_link
 from invoice.models import Invoice
-from emailing.helpers.base_classes import EmailMessage
+from emailing.helpers.base_classes import EmailMessage, EmailPayload
 
 def send_email(email_message:EmailMessage):
     """
@@ -121,3 +121,55 @@ def send_invoice_pdf(invoice_pk:str, to_email:str)->None:
         msg.send(fail_silently=False)
     except Exception as e:
         print(f"Failed to send invoice PDF to {to_email}, error: {e}")
+
+def send_password_reset_email2(request, email: str):
+    """
+    Sends a password reset email to the given email address.
+    """
+    try:
+        user: User = User.objects.get(email=email)
+        uid: str = (user.pk)
+        token: str = (user.pk)
+        reset_link: str = request.build_absolute_uri(
+            reverse("password_reset_confirm", kwargs={"uidb64": uid, "token": token})
+        )
+        payload = EmailPayload(
+        subject="Inreal.lt - Slaptažodžio atstatymas",
+        to=[user.email],
+        template_name="components/email/password_reset_email.html",
+        context={"user": user, "reset_link": reset_link},
+        )
+        send_email2(payload)
+
+    except Exception as ex:
+        raise Exception(f"Error sending password reset email: {ex}")
+    
+def send_email2(payload: EmailPayload) -> int:
+    signers_list: list[str] = [signer for signer in payload.to if signer]
+    if not signers_list:
+        raise ValueError("No recipients provided")
+
+    sender = payload.from_email or getattr(settings, "SEND_FROM_EMAIL", None) or settings.DEFAULT_FROM_EMAIL
+
+    html = ""
+    text = payload.body
+
+    if payload.template_name:
+        html = render_to_string(payload.template_name, payload.context)
+        if not text:
+            text = strip_tags(html)
+
+    msg = EmailMultiAlternatives(
+        subject=payload.subject,
+        body=text or "",
+        from_email=sender,
+        to=signers_list,
+    )
+
+    if html:
+        msg.attach_alternative(html, "text/html")
+
+    for filename, content, mimetype in payload.attachments:
+        msg.attach(filename, content, mimetype)
+
+    return msg.send(fail_silently=False)
