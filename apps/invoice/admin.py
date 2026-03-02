@@ -11,7 +11,6 @@ class InvoiceItemInline(admin.TabularInline):
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ('user', 'customer', 'invoice_number', 'total_price', 'created_at')
     search_fields = ('user', 'customer', 'invoice_number', 'created_at')
-    exclude = ('invoice_number', 'total_price')
     inlines = [InvoiceItemInline]
 
     def get_queryset(self, request: HttpRequest) -> QuerySet:
