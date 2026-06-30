@@ -62,7 +62,7 @@ class InvoiceItem(models.Model):
     )
     name = models.CharField(max_length=250, blank=False)
     price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Price per unit")
-    amount = models.PositiveIntegerField(blank=False)
+    amount = models.DecimalField(blank=False, max_digits=20, decimal_places=2)
     unit = models.CharField(choices=UNITS, max_length=10, blank=False)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='invoice_items')
 
